@@ -11,23 +11,63 @@
 #include <cmath>
 #include <array>
 #include "Quaternion/Quaternion.h"
+#include "elapsedTimer/elapsedTimer.h"
 
 
 class Madgwick {
 public:
-	Madgwick();
+	Madgwick(ElapsedTimer *elapsedTimer, Quaternion<float> imuFrameDiff=Quaternion<float>())
+	:elapsedTimer(elapsedTimer),imuFrameDiff(imuFrameDiff){
+		__isInitialized = false;
+	};
 
-	/* brief calculate quaternion
-	 * param accelValue Value of accele meter (m/s^2)
-	 * param gyroValue Value of gyroscope (rad/s)
-	 * param time Time since start program (ms)
+	/* 
+	 * brief Calculate quaternion
 	 */
-	void update(std::array<float, 3> accelValue, std::array<float, 3> gyroValue, float time);
+	// void update(std::array<float, 3> accelValue, std::array<float, 3> gyroValue);
+	void update();
 
+	//These functions are used to set sensor values, gyroscope and accelerometer.
+	/*
+	 * brief Set accelerometer output
+	 * param arg Gyroscope value in radian per second (rad/sec)
+	 */
+	void setGyroValue(const Vector3D<float> &arg){
+		gyroValue = arg;
+	}
+
+	/*
+	 * brief Set accelerometer output
+	 * param arg Accelerometer value in G
+	 */
+	void setAccelValue(const Vector3D<float> &arg){
+		accelValue = arg;
+	}
+
+	/*
+	 * brief Getter function of attitude
+	 * retval Attitude
+	 */
+	Quaternion<float> getAttitude(){
+		return imuFrameDiff * quaternion;
+	}
+
+	bool isInitialized(){
+		return __isInitialized;
+	}
 
 private:
-	Quaternion quaternion;
-	float befTime;
+	Quaternion<float> quaternion;
+	Quaternion<float> imuFrameDiff;
+
+	ElapsedTimer *elapsedTimer;
+	float elapsedTime;
+	float deltaTime;
+
+	Vector3D<float> gyroValue;
+	Vector3D<float> accelValue;
+
+	bool __isInitialized;
 };
 
 #endif /* MAGDWICK_MADGWICK_H_ */
