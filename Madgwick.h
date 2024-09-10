@@ -11,13 +11,13 @@
 #include <cmath>
 #include <array>
 #include "Quaternion/Quaternion.h"
-#include "elapsedTimer/elapsedTimer.h"
+#include "delta_time.h"
 
 
 class Madgwick {
 public:
-	Madgwick(ElapsedTimer *elapsedTimer, Quaternion<float> imuFrameDiff=Quaternion<float>())
-	:elapsedTimer(elapsedTimer),imuFrameDiff(imuFrameDiff){
+	Madgwick(DeltaTime *deltaTimer, Quaternion<float> imuFrameDiff=Quaternion<float>())
+	:imuFrameDiff(imuFrameDiff),deltaTimer(deltaTimer){
 		__isInitialized = false;
 	};
 
@@ -60,7 +60,7 @@ private:
 	Quaternion<float> quaternion;
 	Quaternion<float> imuFrameDiff;
 
-	ElapsedTimer *elapsedTimer;
+	DeltaTime *deltaTimer;
 	float elapsedTime;
 	float deltaTime;
 

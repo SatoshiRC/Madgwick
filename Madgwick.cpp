@@ -13,9 +13,7 @@ void Madgwick::update()
 		__isInitialized = true;
 	}
 
-	auto tmp = elapsedTimer->getTimeMS();
-	float stepTime = tmp - elapsedTime;
-	elapsedTime = tmp;
+	float stepTime = deltaTimer->getDelta();
 
 	Quaternion qDotOmega;
 	std::array<float,3> f;
@@ -46,7 +44,7 @@ void Madgwick::update()
 	 }
 
 	 qDot = qDotOmega - qDotEpsilon.normalize()*beta;
-	 quaternion=quaternion+qDot*stepTime/1000.0;
+	 quaternion=quaternion+qDot*stepTime;
 
 	 quaternion.normalize();
 }
